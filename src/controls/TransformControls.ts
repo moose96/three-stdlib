@@ -258,7 +258,7 @@ class TransformControls<TCamera extends Camera = Camera> extends Object3D {
   private pointerHover = (pointer: TransformControlsPointerObject): void => {
     if (this.object === undefined || this.dragging === true) return
 
-    this.raycaster.setFromCamera((pointer as unknown) as Vector2, this.camera)
+    this.raycaster.setFromCamera(pointer as unknown as Vector2, this.camera)
 
     const intersect = this.intersectObjectWithRay(this.gizmo.picker[this.mode], this.raycaster)
 
@@ -273,7 +273,7 @@ class TransformControls<TCamera extends Camera = Camera> extends Object3D {
     if (this.object === undefined || this.dragging === true || pointer.button !== 0) return
 
     if (this.axis !== null) {
-      this.raycaster.setFromCamera((pointer as unknown) as Vector2, this.camera)
+      this.raycaster.setFromCamera(pointer as unknown as Vector2, this.camera)
 
       const planeIntersect = this.intersectObjectWithRay(this.plane, this.raycaster, true)
 
@@ -328,9 +328,9 @@ class TransformControls<TCamera extends Camera = Camera> extends Object3D {
       space = 'world'
     }
 
-    if (object === undefined || axis === null || this.dragging === false || pointer.button !== -1) return
+    if (object === undefined || axis === null || this.dragging === false) return
 
-    this.raycaster.setFromCamera((pointer as unknown) as Vector2, this.camera)
+    this.raycaster.setFromCamera(pointer as unknown as Vector2, this.camera)
 
     const planeIntersect = this.intersectObjectWithRay(this.plane, this.raycaster, true)
 
@@ -543,6 +543,7 @@ class TransformControls<TCamera extends Camera = Camera> extends Object3D {
     switch ((event as PointerEvent).pointerType) {
       case 'mouse':
       case 'pen':
+      case 'touch':
         this.pointerHover(this.getPointer(event))
         break
     }
@@ -1050,7 +1051,7 @@ class TransformControlsGizmo extends Object3D {
     this.helper['rotate'].visible = this.mode === 'rotate'
     this.helper['scale'].visible = this.mode === 'scale'
 
-    let handles: Array<Object3D & { tag?: string }> = []
+    let handles: (Object3D & { tag?: string })[] = []
     handles = handles.concat(this.picker[this.mode].children)
     handles = handles.concat(this.gizmo[this.mode].children)
     handles = handles.concat(this.helper[this.mode].children)
